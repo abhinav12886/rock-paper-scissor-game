@@ -1,1 +1,56 @@
+#include<Servo.h>
+int green = 13;
+int blue = 12;
+int buzzer = 10;
+int trigger = 11;
+int echo = 8;
+long tim;
+int cm, inch, a=0;
+Servo pwm_pin;
+ 
+void setup()
+{
+  pinMode(green,OUTPUT);
+  pinMode(blue,OUTPUT);
+  pinMode(buzzer,OUTPUT);
+    pinMode(trigger,OUTPUT);
+  pinMode(echo,INPUT);
+  pwm_pin.attach(9);
+  Serial.begin(9600);
+  digitalWrite(blue,1);
+}
+void loop()
+{
+  
+  digitalWrite(trigger,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigger,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger,LOW);
+  tim = pulseIn(echo,HIGH);
+  cm = 0.017*tim;
+  inch = cm/2.54;
+  Serial.print(inch);
+  Serial.println("inch");
+  if(inch<=10&&a==0)
+  {
+    a=1;
+    digitalWrite(blue,0);
+    pwm_pin.write(180);
+    delay(15);
+    digitalWrite(green,1);
+    digitalWrite(buzzer,1);
+    delay(200);
+    digitalWrite(buzzer,0);
+  }
+  
+  else if(inch>20)
+  {
+    digitalWrite(green,0);
+    pwm_pin.write(0);
+    delay(15);
+    digitalWrite(blue,1);
+    a=0;
+  }
+}
 
